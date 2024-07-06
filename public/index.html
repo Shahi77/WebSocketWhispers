@@ -19,7 +19,7 @@
 
          function sendMessage() {
             const message = messageInput.value;
-            socket.emit("event:message",message);
+            socket.emit("send:message",message);
             messageInput.value="";
         }
         sentBtn.addEventListener("click",(e)=>{
@@ -30,7 +30,7 @@
                 sendMessage();
             }
         });
-        socket.on("event:message", (message) => {
+        socket.on("message", (message) => {
              messageDisplay.innerHTML += "• " + message + "<br>";
         })
     </script>

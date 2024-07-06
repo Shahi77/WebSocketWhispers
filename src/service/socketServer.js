@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-
+const { pub, sub } = require("../service/redis");
 class SocketService {
   #io;
   constructor() {
@@ -16,13 +16,22 @@ class SocketService {
         `New user connected to the server with socket_id: ${socket.id}`
       );
 
-      socket.on("event:message", (message) => {
-        console.log(`message received from ${socket.id}: ${message}`);
-        io.emit("event:message", message);
+      sub.subscribe("MESSAGES");
+      socket.on("send:message", async (message) => {
+        await pub.publish("MESSAGES", message);
       });
 
-      socket.on("disconnect", () => {
-        console.log(`socket_id: ${socket.id} disconnected`);
+      sub.on("message", (channel, message) => {
+        if (channel == "MESSAGES") {
+          console.log(`${socket.id}: ${message}`);
+          io.emit("message", message);
+        }
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log(`Disconnected socket_id: ${socket.id}, reason: ${reason}`);
+        sub.unsubscribe("MESSAGES");
+        sub.removeAllListeners("message");
       });
     });
   }
