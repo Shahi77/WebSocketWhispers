@@ -1,0 +1,34 @@
+const { Server } = require("socket.io");
+
+class SocketService {
+  #io;
+  constructor() {
+    console.log("Socket service init...");
+    this.#io = new Server(); // Initializes a new instance of the Socket.io server
+  }
+
+  initListeners() {
+    const io = this.io;
+    console.log("Socket listeners init...");
+
+    io.on("connection", (socket) => {
+      console.log(
+        `New user connected to the server with socket_id: ${socket.id}`
+      );
+
+      socket.on("event:message", (message) => {
+        console.log(`message received from ${socket.id}: ${message}`);
+        io.emit("event:message", message);
+      });
+
+      socket.on("disconnect", () => {
+        console.log(`socket_id: ${socket.id} disconnected`);
+      });
+    });
+  }
+  get io() {
+    return this.#io;
+  }
+}
+
+module.exports = SocketService;

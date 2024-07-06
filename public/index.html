@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whispers</title>
+</head>
+<body>
+    <h1>Scalable chat application</h1>
+    <input type="text" id="message" placeholder="Type the message..."/>
+    <button id="sentBtn">Send</button>
+    <p id="messageDisplay"></p>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const sentBtn = document.getElementById("sentBtn");
+        const messageInput = document.getElementById("message");
+        const messageDisplay = document.getElementById("messageDisplay");
+
+         function sendMessage() {
+            const message = messageInput.value;
+            socket.emit("event:message",message);
+            messageInput.value="";
+        }
+        sentBtn.addEventListener("click",(e)=>{
+            sendMessage();
+        })
+        messageInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+        socket.on("event:message", (message) => {
+             messageDisplay.innerHTML += "• " + message + "<br>";
+        })
+    </script>
+</body>
+</html>
