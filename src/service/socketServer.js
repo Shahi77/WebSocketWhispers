@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const { pub, sub } = require("../service/redis");
-const { prismaClient } = require("./prisma");
+const { produceMessage } = require("./kafka/producer");
 class SocketService {
   #io;
   constructor() {
@@ -26,6 +26,7 @@ class SocketService {
         if (channel == "MESSAGES") {
           console.log(`${socket.id}: ${message}`);
           io.emit("message", message);
+          await produceMessage(message);
         }
       });
 
