@@ -1,4 +1,4 @@
-const { KAFKA_TOPIC } = require("../../utils/constants");
+const { KAFKA_TOPIC } = require("../../utils/constant");
 const kafka = require("./client");
 
 const consumeMessage = async () => {

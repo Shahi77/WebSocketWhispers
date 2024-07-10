@@ -2,7 +2,7 @@ const app = require("./app");
 const http = require("http");
 const SocketService = require("./service/socketServer");
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 8000;
 
 const init = async () => {
   const socketService = new SocketService();
