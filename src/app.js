@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const v1Router = require("./routes/version1.routes");
+const verifyToken = require("./middleware/auth.middleware");
 require("dotenv").config();
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static(path.resolve("./public")));
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
+app.get("/", verifyToken, (req, res) => {
   res.sendFile("/public/index.html");
 });
 
