@@ -1,7 +1,7 @@
 const prisma = require("../service/prisma");
-const ApiError = require("../utils/ApiError");
 const asyncHandler = require("../utils/asyncHandler");
 const jwt = require("jsonwebtoken");
+const path = require("path");
 
 const verifyToken = asyncHandler(async (req, res, next) => {
   const accessToken =
@@ -9,10 +9,15 @@ const verifyToken = asyncHandler(async (req, res, next) => {
     req.header("Authorization")?.replace("Bearer", "");
 
   if (!accessToken) {
-    throw new ApiError(401, "Unauthorized Request");
+    return res.status(401).sendFile(path.resolve("./public/auth/index.html"));
   }
 
-  const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  } catch (error) {
+    return res.status(401).sendFile(path.resolve("./public/auth/index.html"));
+  }
   const user = await prisma.user.findUnique({
     where: { id: decodedToken.id },
     select: {
@@ -26,7 +31,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
   });
 
   if (!user) {
-    throw new ApiError(401, "Access Token Expired");
+    return res.status(401).sendFile(path.resolve("./public/auth/index.html"));
   }
 
   req.user = user;
