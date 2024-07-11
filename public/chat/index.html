@@ -67,7 +67,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <!-- <nav class="navbar navbar-expand-lg navbar-light bg-primary">
         <div class="container">
             <a class="navbar-brand text-white" href="#">Scale Chat</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -82,7 +82,7 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
     <div class="container">
     <h1>Web Socket Whispers</h1>
     <input type="text" id="message" placeholder="Type the message..."/>
@@ -119,26 +119,26 @@
             messageDisplay.appendChild(messageElement);
             messageDisplay.scrollTop = messageDisplay.scrollHeight;
         })
-        logoutBtn.addEventListener("click", () => {
-            fetch("/v1/auth/logout", {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/json",
-                },
-                })
-                .then((response) => {
-                    if (!response.ok) {
-                            throw new Error("Network Response was not Ok");
-                        }
-                            return response.json();
-                        })
-                        .then((data) => {
-                            window.location.reload();
-                        })
-                        .catch((error) => {
-                            alert("Internal Server Error");
-                        });
-                });
+        // logoutBtn.addEventListener("click", () => {
+        //     fetch("/v1/auth/logout", {
+        //         method: "POST",
+        //         headers: {
+        //         "Content-Type": "application/json",
+        //         },
+        //         })
+        //         .then((response) => {
+        //             if (!response.ok) {
+        //                     throw new Error("Network Response was not Ok");
+        //                 }
+        //                     return response.json();
+        //                 })
+        //                 .then((data) => {
+        //                     window.location.reload();
+        //                 })
+        //                 .catch((error) => {
+        //                     alert("Internal Server Error");
+        //                 });
+        //         });
     </script>
 </body>
 </html>
