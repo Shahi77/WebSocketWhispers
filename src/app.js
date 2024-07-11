@@ -20,7 +20,7 @@ app.use(express.static(path.resolve("./public")));
 app.use(cookieParser());
 
 app.get("/", verifyToken, (req, res) => {
-  res.sendFile("/public/index.html");
+  res.sendFile(path.resolve("./public/chat/index.html"));
 });
 
 app.use("/v1", v1Router);
