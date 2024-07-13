@@ -1,7 +1,9 @@
 const asyncHandler = require("../utils/asyncHandler");
 const ApiResponse = require("../utils/ApiResponse");
-
+const { pub } = require("../service/redis");
 const prisma = require("../service/prisma");
+const { REDIS_CHANNEL } = require("../utils/constant");
+
 const handleSendMessages = asyncHandler(async (req, res) => {
   const { message } = req.body;
   const receiverId = parseInt(req.params.receiverId);
@@ -16,7 +18,11 @@ const handleSendMessages = asyncHandler(async (req, res) => {
   }
   io.to(senderSocketId).emit("newMessage", message);
 
-  //Dump the data to Kafka and then further add the data to DB
+  //dump the data to Kafka and then further add the data to DB
+  await pub.publish(
+    REDIS_CHANNEL,
+    JSON.stringify({ receiverId, senderId, message })
+  );
   let chat = await prisma.chat.findFirst({
     where: { participants: { hasEvery: [senderId, receiverId] } },
   });

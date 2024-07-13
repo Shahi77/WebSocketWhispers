@@ -1,3 +1,4 @@
 const KAFKA_TOPIC = "MESSAGES";
+const REDIS_CHANNEL = "MESSAGES";
 
-module.exports = { KAFKA_TOPIC };
+module.exports = { KAFKA_TOPIC, REDIS_CHANNEL };
