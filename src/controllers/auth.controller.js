@@ -9,15 +9,15 @@ const { AUTH_COOKIE_OPTIONS } = require("../config/cookies.config");
 const generateTokens = async (userId) => {
   try {
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    const generateAccessToken = generateToken(userId, true);
-    const generateRefreshToken = generateToken(userId, false);
+    const generatedAccessToken = generateToken(userId, true);
+    const generatedRefreshToken = generateToken(userId, false);
 
     await prisma.user.update({
       where: { id: userId },
-      data: { refreshToken: generateRefreshToken },
+      data: { refreshToken: generatedRefreshToken },
     });
 
-    return { generateAccessToken, generateRefreshToken };
+    return { generatedAccessToken, generatedRefreshToken };
   } catch (error) {
     throw new ApiError(500, "Error while generating tokens", error);
   }
