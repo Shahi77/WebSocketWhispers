@@ -3,6 +3,7 @@ const ApiResponse = require("../utils/ApiResponse");
 const { pub } = require("../service/redis");
 const prisma = require("../service/prisma");
 const { REDIS_CHANNEL } = require("../utils/constant");
+const { getSocketId } = require("../service/socketServer");
 
 const handleSendMessages = asyncHandler(async (req, res) => {
   const { message } = req.body;

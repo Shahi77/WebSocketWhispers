@@ -3,16 +3,11 @@ const { redis, sub } = require("../service/redis");
 const http = require("http");
 const express = require("express");
 const { REDIS_CHANNEL } = require("../utils/constant");
-const { channel } = require("diagnostics_channel");
+const { getSocketId } = require("../utils/socketManager");
 
 const app = express();
-
 const server = http.createServer(app);
 const io = new Server(server);
-
-const getSocketId = async (userId) => {
-  return await redis.get(`userSocketMap:${userId}`);
-};
 
 // subscribing to REDIS message channel on server start
 sub.subscribe(REDIS_CHANNEL);
@@ -33,6 +28,7 @@ sub.on("message", async (channel, receivedMessage) => {
 
 io.on("connection", async (socket) => {
   console.log(`New user connected to the server with socket_id: ${socket.id}`);
+  //userID and socketID as key value pair on Redis
   const cookies = socket.handshake.headers.cookie.split(";");
   let userId;
   for (const cookie of cookies) {
@@ -43,7 +39,6 @@ io.on("connection", async (socket) => {
     }
   }
   await redis.set(`userSocketMap:${userId}`, socket.id);
-  console.log(userId);
 
   socket.on("disconnect", async () => {
     console.log("user disconnected", socket.id);
@@ -51,4 +46,4 @@ io.on("connection", async (socket) => {
   });
 });
 
-module.exports = { server, io, app, getSocketId };
+module.exports = { server, io, app };
