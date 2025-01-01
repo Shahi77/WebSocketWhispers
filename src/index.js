@@ -5,9 +5,10 @@ const cookieParser = require("cookie-parser");
 const v1Router = require("./routes/version1.routes");
 const { server, app } = require("./service/socketServer");
 const verifyToken = require("./middleware/auth.middleware");
+const { startCronJobs } = require("./service/cronJob");
 require("dotenv").config();
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8001;
 
 app.use(
   cors({
@@ -28,6 +29,7 @@ app.get("/", verifyToken, (req, res) => {
 app.use("/v1", v1Router);
 
 const init = async () => {
+  startCronJobs();
   server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
   });
